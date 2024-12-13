@@ -7,6 +7,11 @@ local options = {
     python = { "black" },
   },
 
+  stylua_args = {
+    "--config-path",
+    "/path/to/your/.stylua.toml",
+  },
+
   format_on_save = {
     -- These options will be passed to conform.format()
     timeout_ms = 500,

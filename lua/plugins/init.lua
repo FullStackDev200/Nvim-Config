@@ -1,5 +1,4 @@
 return {
-
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -18,13 +17,14 @@ return {
     event = "BufWritePre", -- uncomment for format on save
     opts = require "configs.conform",
   },
-  -- These are some examples, uncomment them if you want to see them work!
+
   {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
     end,
   },
+
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -41,17 +41,35 @@ return {
       },
       indent = { enable = true },
     },
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
   },
+
   {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    lazy = true,
+    "echasnovski/mini.ai",
+    lazy = false,
+    version = "*",
     config = function()
-      require("configs.textobject").setup()
+      require("mini.ai").setup()
     end,
   },
+
+  {
+    "echasnovski/mini.surround",
+    version = "*",
+    lazy = false,
+    config = function()
+      require("mini.surround").setup()
+    end,
+  },
+
+  {
+    "echasnovski/mini.operators",
+    lazy = false,
+    version = "*",
+    config = function()
+      require("mini.operators").setup()
+    end,
+  },
+
   {
     "theprimeagen/harpoon",
     branch = "harpoon2",
@@ -61,11 +79,14 @@ return {
     end,
     keys = require "configs.harpoon",
   },
+
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
-    lazy = true,
     ft = "markdown",
+    event = {
+      "BufReadPre " .. vim.fn.expand "~" .. "/MyObsidian/Obsidian Vault/My_Vault*.md",
+    },
     dependencies = {
       -- Required.
       "nvim-lua/plenary.nvim",
@@ -77,7 +98,18 @@ return {
           path = "~/MyObsidian/Obsidian Vault/",
         },
       },
+      ui = {
+        enable = false,
+      },
     },
+  },
+
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    opts = {},
   },
 
   {
@@ -89,6 +121,7 @@ return {
       auto_restore = false,
     },
   },
+
   {
     "jinh0/eyeliner.nvim",
     keys = { "f", "t", "F", "T" },
@@ -104,8 +137,6 @@ return {
       }
     end,
   },
-  {
-    "nvim-telescope/telescope-media-files.nvim",
-    lazy = false,
-  },
+
+  { "meznaric/key-analyzer.nvim", cmd = "KeyAnalyzer", opts = {} },
 }
