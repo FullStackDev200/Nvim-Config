@@ -30,7 +30,7 @@ map(
   -- Delete without affecting the default register
   { "n", "x" },
   "<leader>d",
-  "d",
+  '"_d',
   { noremap = true, silent = true, desc = "Delete without affecting default register" }
 )
 
@@ -49,10 +49,18 @@ map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
 -- [[My remaps]]
 --
+--X to void register
+map("n", "x", '"_x', { noremap = true, silent = true, desc = "Delete character under cursor" })
+
 -- Paste with visual selection or normal mode
 map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
---Tab switch from tabufline
 
+map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+
+map("n", "<leader>x", ":.lua<CR>", { desc = "Execute current line", noremap = true, silent = true })
+map("n", "<leader><leader>x", ":lua :lua<CR>", { desc = "Execute current line", noremap = true, silent = true })
+
+--Tab switch from tabufline
 for i = 1, 9, 1 do
   vim.keymap.set("n", string.format("<A-%s>", i), function()
     vim.api.nvim_set_current_buf(vim.t.bufs[i])
@@ -73,49 +81,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
--- local function surround()
---   -- Prompt the user for input
---   local openBracket = vim.fn.input "Surround with: "
 --
---   local bracketPair = {
---     ["{"] = "}",
---     ["["] = "]",
---     ["("] = ")",
---   }
---   local closeBracket
---
---   if string.find(openBracket, "/") ~= nil then
---     local parts = {}
---     for part in string.gmatch(openBracket, "([^/]+)") do
---       table.insert(parts, part)
---     end
---
---     closeBracket = parts[2]
---     openBracket = parts[1]
---     print(openBracket)
---   elseif openBracket == '"' then
---     openBracket = '\\"'
---     closeBracket = '\\"'
---   else
---     closeBracket = bracketPair[openBracket] or openBracket
---   end
---
---   -- Check if the openBracket is not empty
---   if openBracket and openBracket ~= "" then
---     -- Execute the commands to surround the selection
---     vim.cmd('execute "normal! `>a' .. closeBracket .. "\\<Esc>`<i" .. openBracket .. '"')
---   else
---     print "No character entered!"
---   end
--- end
--- -- Create a command to call the function (optional)
--- vim.api.nvim_create_user_command("Surround", surround, {})
--- -- Map the function to a key combination (optional)
--- map("n", "<leader>sr", ":Surround<CR>", { noremap = true, silent = true })
--- map("v", "<leader>sr", "<ESC>:Surround<CR>", { noremap = true, silent = true })
-
---
---Telescope mappin
+--Telescope mappings
 --
 local telescope = require "telescope"
 map("n", "<leader>oo", function()
@@ -134,6 +101,7 @@ map("n", "<leader>fz", function()
   require("telescope").extensions.zoxide.list {
     attach_mappings = function(prompt_bufnr, _)
       -- Define action to take on selection
+      --
       actions.select_default:replace(function()
         local selected_entry = action_state.get_selected_entry()
         local selected_path = selected_entry.path
@@ -160,26 +128,3 @@ nomap("n", "<leader>ch")
 map("n", "<leader>c", function()
   require("nvchad.tabufline").close_buffer()
 end, { desc = "buffer close" })
-map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>x", ":.lua<CR>", { noremap = true, silent = true })
-map("n", "<leader><leader>x", ":lua :lua<CR>", { noremap = true, silent = true })
-
--- Function to open documentation
-local function open_language_docs()
-  local filetype = vim.bo.filetype
-  if filetype == "python" then
-    telescope.help_tags { search = "python" }
-  elseif filetype == "cpp" or filetype == "c" then
-    vim.cmd "Man g++" -- Example for opening `man` page
-  elseif filetype == "lua" then
-    telescope.help_tags { search = "lua" }
-  elseif filetype == "javascript" or filetype == "typescript" then
-    -- Optionally integrate with DevDocs plugin or any external tool
-    vim.cmd "!open https://devdocs.io/javascript/"
-  else
-    print("No documentation available for this filetype: " .. filetype)
-  end
-end
-
--- Map the function to a key (e.g., <Leader>d)
-vim.keymap.set("n", "<Leader>D", open_language_docs, { noremap = true, silent = true })
