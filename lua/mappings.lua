@@ -20,14 +20,15 @@ end, {})
 
 -- Enter command mode from normal mode using semicolon
 map("n", ";", ":", { desc = "CMD enter command mode" })
+
 -- Pressing 'jk' in insert mode to escape to normal mode
 map("i", "jk", "<ESC>", { desc = "Escape to normal mode" })
-map("i", "<C-w>", "<C-o>", { desc = "Toggle normal mode for one command" })
---
+
 -- Undo with <C-z>
 map("n", "<C-z>", "u", { desc = "Undo" })
+
+-- Delete without affecting the default register
 map(
-  -- Delete without affecting the default register
   { "n", "x" },
   "<leader>d",
   '"_d',
@@ -39,14 +40,15 @@ map("x", ">", ">gv", { noremap = true, silent = true, desc = "Indent right and r
 map("x", "<", "<gv", { noremap = true, silent = true, desc = "Indent left and reselect" })
 
 -- Primeagen settings for smoother scrolling and movement
-map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
 map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
+--
 -- [[My remaps]]
 --
 --X to void register
@@ -60,7 +62,10 @@ map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git
 map("n", "<leader>x", ":.lua<CR>", { desc = "Execute current line", noremap = true, silent = true })
 map("n", "<leader><leader>x", ":lua :lua<CR>", { desc = "Execute current line", noremap = true, silent = true })
 
---Tab switch from tabufline
+--Switch tabs
+
+
+--Buffer switch from tabufline
 for i = 1, 9, 1 do
   vim.keymap.set("n", string.format("<A-%s>", i), function()
     vim.api.nvim_set_current_buf(vim.t.bufs[i])
@@ -82,7 +87,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 --
---Telescope mappings
+--[[Telescope mappings]]
 --
 local telescope = require "telescope"
 map("n", "<leader>oo", function()
@@ -120,7 +125,10 @@ map("n", "<leader>fz", function()
   }
 end)
 
---Deleted keymaps
+--
+--[[Deleted keymaps]]
+--
+
 map("n", "s", "<Nop>", { noremap = true, silent = true })
 nomap("n", "<leader>cm")
 nomap("n", "<leader>ch")

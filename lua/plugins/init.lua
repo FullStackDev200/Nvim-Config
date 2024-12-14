@@ -4,7 +4,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-media-files.nvim", -- media_files extension
-      "jvgrootveld/telescope-zoxide", -- zoxide extension
+      "jvgrootveld/telescope-zoxide",              -- zoxide extension
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-fzf-native.nvim",
     },
