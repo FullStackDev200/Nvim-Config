@@ -48,9 +48,10 @@ return {
     "echasnovski/mini.ai",
     lazy = false,
     version = "*",
+    dependencies = { "nvim-treesitter-textobjects" },
     config = function()
-      require("mini.ai").setup()
-    end,
+      require("configs.mini")
+    end
   },
 
   {
@@ -74,6 +75,7 @@ return {
   {
     "theprimeagen/harpoon",
     branch = "harpoon2",
+    cmd = "Neogit",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require "configs.harpoon"
@@ -81,29 +83,30 @@ return {
     keys = require "configs.harpoon",
   },
 
-  {
-    "epwalsh/obsidian.nvim",
-    version = "*", -- recommended, use latest release instead of latest commit
-    ft = "markdown",
-    event = {
-      "BufReadPre " .. vim.fn.expand "~" .. "/MyObsidian/Obsidian Vault/My_Vault*.md",
-    },
-    dependencies = {
-      -- Required.
-      "nvim-lua/plenary.nvim",
-    },
-    opts = {
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/MyObsidian/Obsidian Vault/",
-        },
-      },
-      ui = {
-        enable = false,
-      },
-    },
-  },
+  -- {
+  --   "epwalsh/obsidian.nvim",
+  --   version = "*", -- recommended, use latest release instead of latest commit
+  --   ft = "markdown",
+  --   event = {
+  --     "BufReadPre " .. vim.fn.expand "~" .. "/MyObsidian/Obsidian Vault/My_Vault*.md",
+  --   },
+  --   dependencies = {
+  --     -- Required.
+  --     "nvim-lua/plenary.nvim",
+  --   },
+  --   opts = {
+  --     workspaces = {
+  --       {
+  --         name = "personal",
+  --         path = "~/MyObsidian/Obsidian Vault/",
+  --       },
+  --     },
+  --     ui = {
+  --       enable = false,
+  --     },
+  --   },
+  -- },
+
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
@@ -153,7 +156,13 @@ return {
   },
 
   {
-    "tpope/vim-fugitive",
-    cmd = "Git",
-  },
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",         -- required
+      "sindrets/diffview.nvim",        -- optional - Diff integration
+      "nvim-telescope/telescope.nvim", -- optional
+    },
+    cmd = "Neogit",
+    config = true
+  }
 }
