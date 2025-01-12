@@ -18,8 +18,6 @@ vim.keymap.set("n", "<RightMouse>", function()
   require("menu").open(options, { mouse = true })
 end, {})
 
--- Enter command mode from normal mode using semicolon
-map("n", ";", ":", { desc = "CMD enter command mode" })
 -- Pressing 'jk' in insert mode to escape to normal mode
 map("i", "jk", "<ESC>", { desc = "Escape to normal mode" })
 map("i", "<C-w>", "<C-o>", { desc = "Toggle normal mode for one command" })
@@ -57,7 +55,6 @@ map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
 
 map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 
-map("n", "<leader>x", ":.lua<CR>", { desc = "Execute current line", noremap = true, silent = true })
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
 
 --Tab switch from tabufline
@@ -81,10 +78,10 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
+-- Floaterminal
+map("n", "<leader>st", ":Floaterminal<CR>", { desc = "Open floating terminal" })
 --Git remaps
-map("n", "<leader>gd", ":Gvdiffsplit!<CR>", { desc = "Open 3 split view" })
-map("n", "<leader>h", ":diffget //2<CR>", { desc = "Git chose left" })
-map("n", "<leader>l", ":diffget //3<CR>", { desc = "Git chose right" })
+map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 
 --
 --Telescope mappings
@@ -98,7 +95,7 @@ map("n", "<leader>on", function()
   require("telescope.builtin").find_files { cwd = "~/.config/nvim" }
 end, { desc = "Open Neovim" })
 
-map("n", "<leader>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", { desc = "telescope file browser" })
+map("n", "<leader>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", { desc = "Telescope file browser" })
 
 map("n", "<leader>fz", function()
   local actions = require "telescope.actions"
@@ -125,77 +122,7 @@ map("n", "<leader>fz", function()
   }
 end)
 
+map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
+
 --Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })
-nomap("n", "<leader>cm")
-nomap("n", "<leader>ch")
-
-map("n", "<leader>c", function()
-  require("nvchad.tabufline").close_buffer()
-end, { desc = "buffer close" })
-
-
-vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>")
-
-local state = {
-  floating = {
-    buf = -1,
-    win = -1,
-  }
-}
-
-local function create_floating_window(opts)
-  opts = opts or {}
-  local width = opts.width or math.floor(vim.o.columns * 0.8)
-  local height = opts.height or math.floor(vim.o.lines * 0.8)
-
-  -- Calculate the position to center the window
-  local col = math.floor((vim.o.columns - width) / 2)
-  local row = math.floor((vim.o.lines - height) / 2)
-
-  -- Create a buffer
-  local buf = nil
-  if vim.api.nvim_buf_is_valid(opts.buf) then
-    buf = opts.buf
-  else
-    buf = vim.api.nvim_create_buf(false, true) -- No file, scratch buffer
-  end
-
-  -- Define window configuration
-  local win_config = {
-    relative = "editor",
-    width = width,
-    height = height,
-    col = col,
-    row = row,
-    style = "minimal", -- No borders or extra UI elements
-    border = "rounded",
-  }
-
-  -- Create the floating window
-  local win = vim.api.nvim_open_win(buf, true, win_config)
-
-  return { buf = buf, win = win }
-end
-
-local toggle_terminal = function()
-  if not vim.api.nvim_win_is_valid(state.floating.win) then
-    state.floating = create_floating_window { buf = state.floating.buf }
-    if vim.bo[state.floating.buf].buftype ~= "terminal" then
-      vim.cmd.terminal()
-    end
-  else
-    vim.api.nvim_win_hide(state.floating.win)
-  end
-end
-
--- Example usage:
--- Create a floating window with default dimensions
-vim.api.nvim_create_user_command("Floaterminal", toggle_terminal, {})
-
-
-
-
-vim.keymap.set("n", "<leader>sf", function()
-  require("conform").format({ async = true })
-end, { desc = "Format with conform" })

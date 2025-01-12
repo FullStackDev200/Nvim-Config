@@ -15,3 +15,16 @@ vim.opt.conceallevel = 1 -- Adjust the value as needed (0, 1, or 2)
 vim.api.nvim_set_keymap("n", "n", ":lua search_and_notify()<CR>", { noremap = true, silent = true })
 -- Undotree longer undo
 vim.opt.undodir = os.getenv "HOME" .. "/.vim/undodir"
+
+-- vim.opt.list = true
+-- vim.opt.listchars = {
+--   eol = "↴", -- Icon for line breaks
+--   tab = "→ ", -- Icon for tabs
+--   space = "·", -- Icon for spaces
+--   trail = "•", -- Icon for trailing spaces
+--   extends = "…", -- Icon for overflowing lines
+--   precedes = "…", -- Icon for wrapped lines
+-- }
+--
+--
+--

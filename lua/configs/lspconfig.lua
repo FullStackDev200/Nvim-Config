@@ -54,21 +54,17 @@ lspconfig.emmet_language_server.setup {
 
 -- Clangd setup
 lspconfig.clangd.setup {
-  cmd = { "clangd" }, -- If clangd is in your PATH, otherwise specify the full path
-  filetypes = { "c", "cpp", "objc", "objcpp" }, -- Files clangd should work with
+  cmd = { "clangd" },                                                      -- If clangd is in your PATH, otherwise specify the full path
+  filetypes = { "c", "cpp", "objc", "objcpp" },                            -- Files clangd should work with
   root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git"), -- Change this if you have different root patterns
   settings = {
     clangd = {
       fallbackFlags = { "-std=c++17" }, -- Modify this if needed, e.g., for newer C++ standards
     },
   },
-  on_attach = function(client, bufnr)
-    -- Keybindings and custom configurations can be added here
-    local opts = { noremap = true, silent = true }
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-    -- Add more mappings as needed
-  end,
+
+  on_attach = nvlsp.on_attach,
+
   capabilities = require("cmp_nvim_lsp").default_capabilities(), -- Optional, if you're using nvim-cmp for autocompletion
 }
 
