@@ -1,10 +1,7 @@
 require "nvchad.mappings"
 
 local map = vim.keymap.set
-local nomap = vim.keymap.del
 
-map("n", ";", ":", { desc = "CMD enter command mode" })
-map("i", "jk", "<ESC>")
 -- Keyboard users
 vim.keymap.set("n", "<C-t>", function()
   require("menu").open "default"
@@ -18,10 +15,7 @@ vim.keymap.set("n", "<RightMouse>", function()
   require("menu").open(options, { mouse = true })
 end, {})
 
--- Pressing 'jk' in insert mode to escape to normal mode
-map("i", "jk", "<ESC>", { desc = "Escape to normal mode" })
-map("i", "<C-w>", "<C-o>", { desc = "Toggle normal mode for one command" })
---
+
 -- Undo with <C-z>
 map("n", "<C-z>", "u", { desc = "Undo" })
 map(
@@ -44,6 +38,28 @@ map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
 map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
+
+--Better j and k
+
+map("n", "j", function(...)
+  local count = vim.v.count
+
+  if count == 0 then
+    return "gj"
+  else
+    return "j"
+  end
+end, { expr = true })
+
+map("n", "k", function(...)
+  local count = vim.v.count
+
+  if count == 0 then
+    return "gk"
+  else
+    return "k"
+  end
+end, { expr = true })
 
 -- [[My remaps]]
 --
@@ -82,6 +98,10 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 map("n", "<leader>st", ":Floaterminal<CR>", { desc = "Open floating terminal" })
 --Git remaps
 map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
+
+-- Lsp remaps
+map("n", "<leader>ld", require('telescope.builtin').lsp_document_symbols, { desc = "Show document symbols" })
+map("n", "<leader>lw", require('telescope.builtin').lsp_workspace_symbols, { desc = "Show workspace symbols" })
 
 --
 --Telescope mappings
@@ -122,7 +142,36 @@ map("n", "<leader>fz", function()
   }
 end)
 
+
+---Dap mappings
+-- vim.api.nvim_set_keymap("n", "<F5>", ":DapContinue<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F10>", ":DapStepOver<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F11>", ":DapStepInto<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F12>", ":DapStepOut<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F2>", ":DapToggleBreakpoint<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F3>", ":lua require'dap'.repl.open()<CR>", { noremap = true, silent = true })
+
+map("n", "<F1>", require("dap").continue)
+map("n", "<F2>", require("dap").step_into)
+map("n", "<F3>", require("dap").step_over)
+map("n", "<F4>", require("dap").step_out)
+map("n", "<F5>", require("dap").step_back)
+map("n", "<F13>", require("dap").restart)
+
 map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
 
 --Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })
+
+vim.keymap.del("n", "<C-s>")
+
+
+
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   callback = function(ev)
+--     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+--     if client:supports_method('textDocument/completion') then
+--       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+--     end
+--   end,
+-- })

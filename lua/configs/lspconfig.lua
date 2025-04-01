@@ -54,7 +54,15 @@ lspconfig.emmet_language_server.setup {
 
 -- Clangd setup
 lspconfig.clangd.setup {
-  cmd = { "clangd" },                                                      -- If clangd is in your PATH, otherwise specify the full path
+  cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--completion-style=bundled",
+    "--function-arg-placeholders=false",
+    "--fallback-style=llvm",
+  },
   filetypes = { "c", "cpp", "objc", "objcpp" },                            -- Files clangd should work with
   root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git"), -- Change this if you have different root patterns
   settings = {
@@ -67,6 +75,15 @@ lspconfig.clangd.setup {
 
   capabilities = require("cmp_nvim_lsp").default_capabilities(), -- Optional, if you're using nvim-cmp for autocompletion
 }
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  pattern = { "*.c", "*.cpp", "*.h", "*.hpp" }, -- Apply only to C/C++ files
+  -- Clangd-specific mappings
+  callback = function(args)
+    vim.keymap.set("n", "<leader>ch", "<cmd>ClangdSwitchSourceHeader<CR>",
+      { noremap = true, silent = true, buffer = args.buf })
+  end
+})
 
 -- Pyright setup for Python
 lspconfig.pyright.setup {
