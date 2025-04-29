@@ -4,7 +4,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-media-files.nvim", -- media_files extension
-      "jvgrootveld/telescope-zoxide",              -- zoxide extension
+      "jvgrootveld/telescope-zoxide", -- zoxide extension
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-fzf-native.nvim",
     },
@@ -42,7 +42,6 @@ return {
       },
       indent = { enable = true },
     },
-
   },
 
   {
@@ -53,11 +52,11 @@ return {
     opts = function()
       local options = {
         preview = {
-          quit = "q",                             -- optional keymapping for quit preview
-          accept = "<tab>",                       -- optional keymapping for accept preview
+          quit = "q", -- optional keymapping for quit preview
+          accept = "<tab>", -- optional keymapping for accept preview
         },
-        header_extension = "h",                   -- optional
-        source_extension = "cpp",                 -- optional
+        header_extension = "h", -- optional
+        source_extension = "cpp", -- optional
         custom_define_class_function_commands = { -- optional
           TSCppImplWrite = {
             output_handle = require("nt-cpp-tools.output_handlers").get_add_to_cpp(),
@@ -79,28 +78,34 @@ return {
   },
 
   {
+    "chentoast/marks.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  {
     "mfussenegger/nvim-dap",
     event = "VeryLazy",
     dependencies = {
-      "rcarriga/nvim-dap-ui",           -- Optional: UI for nvim-dap
-      "theHamsta/nvim-dap-virtual-text" -- Optional: Virtual text support
+      "rcarriga/nvim-dap-ui", -- Optional: UI for nvim-dap
+      "theHamsta/nvim-dap-virtual-text", -- Optional: Virtual text support
     },
     config = function()
       require("dapui").setup()
       require("nvim-dap-virtual-text").setup()
-      require("configs.dapconfig")
-    end
+      require "configs.dapconfig"
+    end,
   },
 
   {
     "rcarriga/nvim-dap-ui",
     dependencies = {
       "mfussenegger/nvim-dap",
-      "nvim-neotest/nvim-nio"
+      "nvim-neotest/nvim-nio",
     },
     config = function()
-      local dap = require("dap")
-      local dapui = require("dapui")
+      local dap = require "dap"
+      local dapui = require "dapui"
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
       end
@@ -112,17 +117,17 @@ return {
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()
       end
-    end
+    end,
   },
 
   {
     "echasnovski/mini.ai",
     lazy = false,
     version = "*",
-    dependencies = { "nvim-treesitter-textobjects" },
+    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     config = function()
-      require("configs.mini")
-    end
+      require "configs.mini"
+    end,
   },
 
   {
@@ -176,7 +181,6 @@ return {
   --     },
   --   },
   -- },
-
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
@@ -233,13 +237,11 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     cmd = "Neogit",
-    config = true
+    config = true,
   },
 
   {
     "sindrets/diffview.nvim",
     lazy = false,
   },
-
-
 }

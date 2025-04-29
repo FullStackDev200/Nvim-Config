@@ -1,10 +1,9 @@
 -- load defaults i.e lua_lsp
-require("nvchad.configs.lspconfig").defaults()
 
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls" }
+local servers = { "html", "cssls", "lua_ls", "clangd" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- lsps with default config
@@ -63,7 +62,7 @@ lspconfig.clangd.setup {
     "--function-arg-placeholders=false",
     "--fallback-style=llvm",
   },
-  filetypes = { "c", "cpp", "objc", "objcpp" },                            -- Files clangd should work with
+  filetypes = { "c", "cpp", "objc", "objcpp" }, -- Files clangd should work with
   root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git"), -- Change this if you have different root patterns
   settings = {
     clangd = {
@@ -80,22 +79,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
   pattern = { "*.c", "*.cpp", "*.h", "*.hpp" }, -- Apply only to C/C++ files
   -- Clangd-specific mappings
   callback = function(args)
-    vim.keymap.set("n", "<leader>ch", "<cmd>ClangdSwitchSourceHeader<CR>",
-      { noremap = true, silent = true, buffer = args.buf })
-  end
+    vim.keymap.set(
+      "n",
+      "<leader>ch",
+      "<cmd>ClangdSwitchSourceHeader<CR>",
+      { noremap = true, silent = true, buffer = args.buf }
+    )
+  end,
 })
 
 -- Pyright setup for Python
 lspconfig.pyright.setup {
-  on_attach = function(client, bufnr)
-    -- Configure keybindings and other settings here if needed
-    local bufopts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
-  end,
   settings = {
     python = {
       analysis = {
@@ -107,3 +101,28 @@ lspconfig.pyright.setup {
     },
   },
 }
+
+-- lspconfig.lua_ls.setup {
+--   on_attach = nvlsp.on_attach,
+--   on_init = nvlsp.on_init,
+--   capabilities = nvlsp.capabilities,
+--   settings = {
+--     Lua = {
+--       runtime = {
+--         version = "LuaJIT",
+--       },
+--       diagnostics = {
+--         globals = { "vim" }, -- To prevent warnings about global `vim`
+--       },
+--       workspace = {
+--         library = vim.api.nvim_get_runtime_file("", true),
+--         checkThirdParty = false,
+--       },
+--       telemetry = {
+--         enable = false,
+--       },
+--     },
+--   },
+-- }
+
+vim.lsp.enable "lua_ls"

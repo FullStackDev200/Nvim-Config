@@ -15,11 +15,10 @@ vim.keymap.set("n", "<RightMouse>", function()
   require("menu").open(options, { mouse = true })
 end, {})
 
-
 -- Undo with <C-z>
 map("n", "<C-z>", "u", { desc = "Undo" })
 map(
--- Delete without affecting the default register
+  -- Delete without affecting the default register
   { "n", "x" },
   "<leader>d",
   '"_d',
@@ -41,7 +40,7 @@ map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
 --Better j and k
 
-map("n", "j", function(...)
+map("n", "j", function()
   local count = vim.v.count
 
   if count == 0 then
@@ -51,7 +50,7 @@ map("n", "j", function(...)
   end
 end, { expr = true })
 
-map("n", "k", function(...)
+map("n", "k", function()
   local count = vim.v.count
 
   if count == 0 then
@@ -80,6 +79,13 @@ for i = 1, 9, 1 do
   end)
 end
 
+map({ "n", "i" }, "]b", function()
+  require("nvchad.tabufline").prev()
+end, { silent = true, desc = "Switch to next buffer" })
+map({ "n", "i" }, "[b", function()
+  require("nvchad.tabufline").next()
+end, { silent = true, desc = "Switch to next buffer" })
+
 -- Command to remove carriage returns
 vim.api.nvim_create_user_command("RemoveCarriageReturns", function()
   vim.fn.execute [[%s/\r//g]]
@@ -100,8 +106,18 @@ map("n", "<leader>st", ":Floaterminal<CR>", { desc = "Open floating terminal" })
 map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 
 -- Lsp remaps
-map("n", "<leader>ld", require('telescope.builtin').lsp_document_symbols, { desc = "Show document symbols" })
-map("n", "<leader>lw", require('telescope.builtin').lsp_workspace_symbols, { desc = "Show workspace symbols" })
+map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc = "Show document symbols" })
+map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
+
+--Luasnip
+local ls = require "luasnip"
+-- vim.keymap.del({ "n", "i", "v" }, "<Tab>", { silent = true })
+
+map({ "i", "n" }, "<c-k>", function()
+  if ls.expand_or_jumpable() then
+    ls.expand_or_jump()
+  end
+end, { silent = true })
 
 --
 --Telescope mappings
@@ -116,6 +132,8 @@ map("n", "<leader>on", function()
 end, { desc = "Open Neovim" })
 
 map("n", "<leader>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", { desc = "Telescope file browser" })
+
+map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
 
 map("n", "<leader>fz", function()
   local actions = require "telescope.actions"
@@ -142,14 +160,7 @@ map("n", "<leader>fz", function()
   }
 end)
 
-
 ---Dap mappings
--- vim.api.nvim_set_keymap("n", "<F5>", ":DapContinue<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F10>", ":DapStepOver<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F11>", ":DapStepInto<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F12>", ":DapStepOut<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F2>", ":DapToggleBreakpoint<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F3>", ":lua require'dap'.repl.open()<CR>", { noremap = true, silent = true })
 
 map("n", "<F1>", require("dap").continue)
 map("n", "<F2>", require("dap").step_into)
@@ -158,20 +169,5 @@ map("n", "<F4>", require("dap").step_out)
 map("n", "<F5>", require("dap").step_back)
 map("n", "<F13>", require("dap").restart)
 
-map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
-
 --Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })
-
-vim.keymap.del("n", "<C-s>")
-
-
-
--- vim.api.nvim_create_autocmd('LspAttach', {
---   callback = function(ev)
---     local client = vim.lsp.get_client_by_id(ev.data.client_id)
---     if client:supports_method('textDocument/completion') then
---       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
---     end
---   end,
--- })
