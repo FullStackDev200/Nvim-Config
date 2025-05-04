@@ -38,6 +38,8 @@ map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
+map("i", "<C-k>", "<Up>", { desc = "move up", noremap = true })
+
 --Better j and k
 
 map("n", "j", function()
@@ -71,6 +73,9 @@ map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
 map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
+
+map({ "n", "i", "v" }, "<Tab>", "<Nop>", { silent = true })
+map({ "n", "i", "v" }, "<S-Tab>", "<Nop>", { silent = true })
 
 --Tab switch from tabufline
 for i = 1, 9, 1 do
@@ -111,13 +116,6 @@ map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { des
 
 --Luasnip
 local ls = require "luasnip"
--- vim.keymap.del({ "n", "i", "v" }, "<Tab>", { silent = true })
-
-map({ "i", "n" }, "<c-k>", function()
-  if ls.expand_or_jumpable() then
-    ls.expand_or_jump()
-  end
-end, { silent = true })
 
 --
 --Telescope mappings
@@ -168,6 +166,8 @@ map("n", "<F3>", require("dap").step_over)
 map("n", "<F4>", require("dap").step_out)
 map("n", "<F5>", require("dap").step_back)
 map("n", "<F13>", require("dap").restart)
+
+--Cmp mappings
 
 --Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })

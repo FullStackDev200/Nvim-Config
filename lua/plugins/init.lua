@@ -4,7 +4,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-media-files.nvim", -- media_files extension
-      "jvgrootveld/telescope-zoxide", -- zoxide extension
+      "jvgrootveld/telescope-zoxide",
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-fzf-native.nvim",
     },
@@ -20,28 +20,23 @@ return {
   },
 
   {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      local cmp = require "cmp"
 
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "vim",
-        "lua",
-        "vimdoc",
-        "html",
-        "css",
-      },
-      highlight = {
-        enable = true,
-        use_languagetree = true,
-      },
-      indent = { enable = true },
-    },
+      opts.mapping["<C-Space>"] = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      }
+
+      opts.mapping["<Tab>"] = nil
+      opts.mapping["<S-Tab>"] = nil
+
+      -- 🧠 Add a new source without removing existing ones
+      table.insert(opts.sources, { name = "emoji" })
+
+      return opts
+    end,
   },
 
   {
@@ -158,34 +153,10 @@ return {
     keys = require "configs.harpoon",
   },
 
-  -- {
-  --   "epwalsh/obsidian.nvim",
-  --   version = "*", -- recommended, use latest release instead of latest commit
-  --   ft = "markdown",
-  --   event = {
-  --     "BufReadPre " .. vim.fn.expand "~" .. "/MyObsidian/Obsidian Vault/My_Vault*.md",
-  --   },
-  --   dependencies = {
-  --     -- Required.
-  --     "nvim-lua/plenary.nvim",
-  --   },
-  --   opts = {
-  --     workspaces = {
-  --       {
-  --         name = "personal",
-  --         path = "~/MyObsidian/Obsidian Vault/",
-  --       },
-  --     },
-  --     ui = {
-  --       enable = false,
-  --     },
-  --   },
-  -- },
-
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = "markdown",
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
     ---@module 'render-markdown'
     opts = {},
   },
@@ -202,7 +173,7 @@ return {
 
   {
     "jinh0/eyeliner.nvim",
-    keys = { "f", "t", "F", "T" },
+    event = "VeryLazy",
     config = function()
       require("eyeliner").setup {
         highlight_on_key = true,
@@ -221,12 +192,6 @@ return {
   {
     "nvim-telescope/telescope-media-files.nvim",
     lazy = false,
-  },
-
-  {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    lazy = false,
-    build = "make",
   },
 
   {
