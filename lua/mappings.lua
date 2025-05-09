@@ -74,8 +74,8 @@ map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git
 
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
 
-map({ "n", "i", "v" }, "<Tab>", "<Nop>", { silent = true })
-map({ "n", "i", "v" }, "<S-Tab>", "<Nop>", { silent = true })
+-- map({ "n", "i", "v" }, "<Tab>", "<Nop>", { silent = true })
+-- map({ "n", "i", "v" }, "<S-Tab>", "<Nop>", { silent = true })
 
 --Tab switch from tabufline
 for i = 1, 9, 1 do
@@ -115,12 +115,10 @@ map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc
 map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
 
 --Luasnip
-local ls = require "luasnip"
 
 --
 --Telescope mappings
 --
-local telescope = require "telescope"
 map("n", "<leader>oo", function()
   require("telescope.builtin").find_files { cwd = "~/MyObsidian/Obsidian Vault/" }
 end, { desc = "Open note from Obsidian" })

@@ -9,11 +9,8 @@ local servers = {
   "lua_ls",
   "clangd",
 }
-
 vim.lsp.config("clangd", {
-  on_attach = function(_, bufnr)
-    vim.keymap.set({ "n", "i" }, "<leader>lh", "<cmd>ClangdSwitchSourceHeader<CR>", { buffer = bufnr })
-  end,
+  filetype = { "c", "cpp" },
 })
 
 vim.lsp.enable(servers)
