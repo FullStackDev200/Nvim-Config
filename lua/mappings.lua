@@ -84,13 +84,6 @@ for i = 1, 9, 1 do
   end)
 end
 
-map({ "n", "i" }, "]b", function()
-  require("nvchad.tabufline").prev()
-end, { silent = true, desc = "Switch to next buffer" })
-map({ "n", "i" }, "[b", function()
-  require("nvchad.tabufline").next()
-end, { silent = true, desc = "Switch to next buffer" })
-
 -- Command to remove carriage returns
 vim.api.nvim_create_user_command("RemoveCarriageReturns", function()
   vim.fn.execute [[%s/\r//g]]
