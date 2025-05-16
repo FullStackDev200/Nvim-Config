@@ -37,6 +37,13 @@ return {
     end,
   },
 
+
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
+    cond = vim.fn.executable "make" == 1,
+  },
+
   {
     "stevearc/conform.nvim",
     event = "BufWritePre", -- uncomment for format on save
@@ -114,7 +121,7 @@ return {
     "mfussenegger/nvim-dap",
     event = "VeryLazy",
     dependencies = {
-      "rcarriga/nvim-dap-ui", -- Optional: UI for nvim-dap
+      "rcarriga/nvim-dap-ui",            -- Optional: UI for nvim-dap
       "theHamsta/nvim-dap-virtual-text", -- Optional: Virtual text support
     },
     config = function()
