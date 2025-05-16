@@ -8,6 +8,7 @@ local servers = {
   "ts_ls",
   "lua_ls",
   "clangd",
+  "nixd"
 }
 vim.lsp.config("clangd", {
   filetype = { "c", "cpp" },
