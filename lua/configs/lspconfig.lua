@@ -14,11 +14,16 @@ vim.lsp.config("clangd", {
   filetype = { "c", "cpp" },
 })
 
-vim.lsp.enable(servers)
+vim.lsp.config("nixd", {
+  -- your other options as usual
+  settings = {
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.nix" },
-  callback = function()
-    vim.cmd "%!alejandra --quiet"
-  end,
+    nixd = {
+      formatting = {
+        command = { "alejandra" },
+      },
+    },
+  },
 })
+
+vim.lsp.enable(servers)
