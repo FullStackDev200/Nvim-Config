@@ -4,8 +4,8 @@ require("mini.ai").setup {
   custom_textobjects = {
     F = spec_treesitter { a = "@function.outer", i = "@function.inner" },
     o = spec_treesitter {
-      a = "@block.outer", -- outer conditional (e.g., if statements)
-      i = "@block.inner", -- inner conditional (e.g., the content of if statements)
+      a = "@block.outer",
+      i = "@block.inner",
     },
     g = function()
       local from = { line = 1, col = 1 }
