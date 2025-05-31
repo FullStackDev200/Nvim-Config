@@ -1,36 +1,10 @@
 return {
-  { import = "nvchad.blink.lazyspec" },
-  {
-    "saghen/blink.cmp",
-    opts = {
-      completion = {
-        -- TODO: Maybe change this once
-        ghost_text = { enabled = false },
-      },
-      fuzzy = {
-        sorts = {
-          "exact",
-          function(item_a, _)
-            return item_a == "Snippet"
-          end,
-          "score",
-          "sort_text",
-        },
-      },
-      sources = {
-        default = { "snippets", "lsp", "buffer", "path" },
-      },
-    },
-  },
 
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-media-files.nvim", -- media_files extension
-      "jvgrootveld/telescope-zoxide",
-      "nvim-telescope/telescope-file-browser.nvim",
-      "nvim-telescope/telescope-fzf-native.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
     config = function()
       require "configs.telescope"
@@ -39,7 +13,7 @@ return {
 
   {
     "stevearc/conform.nvim",
-    event = "BufWritePre", -- uncomment for format on save
+    event = "BufWritePre",
     opts = require "configs.conform",
   },
 
@@ -50,59 +24,6 @@ return {
       require "configs.lspconfig"
     end,
   },
-
-  -- {
-  --   "hrsh7th/nvim-cmp",
-  --   opts = function(_, opts)
-  --     local cmp = require "cmp"
-  --
-  --     opts.mapping["<C-Space>"] = cmp.mapping.confirm {
-  --       behavior = cmp.ConfirmBehavior.Insert,
-  --       select = true,
-  --     }
-  --
-  --     opts.mapping["<Tab>"] = nil
-  --     opts.mapping["<S-Tab>"] = nil
-  --
-  --     -- 🧠 Add a new source without removing existing ones
-  --     table.insert(opts.sources, { name = "emoji" })
-  --
-  --     return opts
-  --   end,
-  -- },
-
-  -- {
-  --   "Badhi/nvim-treesitter-cpp-tools",
-  --   ft = "cpp",
-  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
-  --   -- Optional: Configuration
-  --   opts = function()
-  --     local options = {
-  --       preview = {
-  --         quit = "q", -- optional keymapping for quit preview
-  --         accept = "<tab>", -- optional keymapping for accept preview
-  --       },
-  --       header_extension = "h", -- optional
-  --       source_extension = "cpp", -- optional
-  --       custom_define_class_function_commands = { -- optional
-  --         TSCppImplWrite = {
-  --           output_handle = require("nt-cpp-tools.output_handlers").get_add_to_cpp(),
-  --         },
-  --         --[[
-  --               <your impl function custom command name> = {
-  --                   output_handle = function (str, context)
-  --                       -- string contains the class implementation
-  --                       -- do whatever you want to do with it
-  --                   end
-  --               }
-  --               ]]
-  --       },
-  --     }
-  --     return options
-  --   end,
-  --   -- End configuration
-  --   config = true,
-  -- },
 
   {
     "chentoast/marks.nvim",
@@ -126,30 +47,19 @@ return {
 
   {
     "rcarriga/nvim-dap-ui",
+    event = "VeryLazy",
     dependencies = {
       "mfussenegger/nvim-dap",
       "nvim-neotest/nvim-nio",
     },
     config = function()
-      local dap = require "dap"
-      local dapui = require "dapui"
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
-
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
-      end
+      require "configs.dapconfig"
     end,
   },
 
   {
     "echasnovski/mini.ai",
-    lazy = false,
+    event = "InsertEnter",
     version = "*",
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     config = function()
@@ -159,8 +69,8 @@ return {
 
   {
     "echasnovski/mini.surround",
+    event = "InsertEnter",
     version = "*",
-    lazy = false,
     config = function()
       require("mini.surround").setup()
     end,
@@ -168,7 +78,7 @@ return {
 
   {
     "echasnovski/mini.operators",
-    lazy = false,
+    event = "InsertEnter",
     version = "*",
     config = function()
       require("mini.operators").setup()
@@ -189,18 +99,7 @@ return {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = "markdown",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-    ---@module 'render-markdown'
     opts = {},
-  },
-
-  {
-    "rmagatti/auto-session",
-    lazy = false,
-
-    opts = {
-      suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
-      auto_restore = false,
-    },
   },
 
   {
@@ -220,11 +119,6 @@ return {
   },
 
   {
-    "nvim-telescope/telescope-media-files.nvim",
-    lazy = false,
-  },
-
-  {
     "NeogitOrg/neogit",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -238,5 +132,14 @@ return {
   {
     "sindrets/diffview.nvim",
     lazy = false,
+  },
+
+  {
+    "jiaoshijie/undotree",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = true,
+    keys = { -- load the plugin only when using it's keybinding:
+      { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
+    },
   },
 }

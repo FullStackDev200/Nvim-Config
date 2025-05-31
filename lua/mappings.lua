@@ -15,10 +15,8 @@ vim.keymap.set("n", "<RightMouse>", function()
   require("menu").open(options, { mouse = true })
 end, {})
 
--- Undo with <C-z>
-map("n", "<C-z>", "u", { desc = "Undo" })
+-- Delete without affecting the default register
 map(
-  -- Delete without affecting the default register
   { "n", "x" },
   "<leader>d",
   '"_d',
@@ -38,10 +36,7 @@ map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
-map("i", "<C-k>", "<Up>", { desc = "move up", noremap = true })
-
 --Better j and k
-
 map("n", "j", function()
   local count = vim.v.count
 
@@ -62,20 +57,16 @@ map("n", "k", function()
   end
 end, { expr = true })
 
+--
 -- [[My remaps]]
 --
+
 --X to void register
 map("n", "x", '"_x', { noremap = true, silent = true, desc = "Delete character under cursor" })
 
 -- Paste with visual selection or normal mode
 map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
-
-map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
-
--- map({ "n", "i", "v" }, "<Tab>", "<Nop>", { silent = true })
--- map({ "n", "i", "v" }, "<S-Tab>", "<Nop>", { silent = true })
 
 --Tab switch from tabufline
 for i = 1, 9, 1 do
@@ -90,16 +81,14 @@ vim.api.nvim_create_user_command("RemoveCarriageReturns", function()
 end, { desc = "Remove carriage returns from the buffer" })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "*", -- Runs for all files; you can specify file types if needed
+  pattern = "*",
   callback = function()
     local _ = pcall(function()
-      vim.cmd "RemoveCarriageReturns" -- Call the command to remove carriage returns
+      vim.cmd "RemoveCarriageReturns"
     end)
   end,
 })
 
--- Floaterminal
-map("n", "<leader>st", ":Floaterminal<CR>", { desc = "Open floating terminal" })
 --Git remaps
 map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 
@@ -107,47 +96,11 @@ map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc = "Show document symbols" })
 map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
 
---Luasnip
-
 --
 --Telescope mappings
 --
-map("n", "<leader>oo", function()
-  require("telescope.builtin").find_files { cwd = "~/MyObsidian/Obsidian Vault/" }
-end, { desc = "Open note from Obsidian" })
-
-map("n", "<leader>on", function()
-  require("telescope.builtin").find_files { cwd = "~/.config/nvim" }
-end, { desc = "Open Neovim" })
-
-map("n", "<leader>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", { desc = "Telescope file browser" })
-
 map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
-
-map("n", "<leader>fz", function()
-  local actions = require "telescope.actions"
-  local action_state = require "telescope.actions.state"
-  require("telescope").extensions.zoxide.list {
-    attach_mappings = function(prompt_bufnr, _)
-      -- Define action to take on selection
-      --
-      actions.select_default:replace(function()
-        local selected_entry = action_state.get_selected_entry()
-        local selected_path = selected_entry.path
-
-        -- Close the Zoxide picker
-        actions.close(prompt_bufnr)
-
-        -- Change directory to the selected path
-        vim.cmd("cd " .. selected_path)
-
-        -- Open the Telescope file finder in the new directory
-        require("telescope.builtin").find_files { cwd = selected_path }
-      end)
-      return true
-    end,
-  }
-end)
+map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 
 ---Dap mappings
 
@@ -157,8 +110,6 @@ map("n", "<F3>", require("dap").step_over)
 map("n", "<F4>", require("dap").step_out)
 map("n", "<F5>", require("dap").step_back)
 map("n", "<F13>", require("dap").restart)
-
---Cmp mappings
 
 --Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })
