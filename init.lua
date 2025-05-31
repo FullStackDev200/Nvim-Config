@@ -31,7 +31,11 @@ dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
 require "nvchad.autocmds"
+require "myplugins"
 
 vim.schedule(function()
   require "mappings"
 end)
+
+-- load luasnips
+require("luasnip.loaders.from_lua").load { paths = "~/.config/nvim/lua/snippets" }
