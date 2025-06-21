@@ -1,6 +1,5 @@
 require("nvchad.configs.lspconfig").defaults()
 
-local servers = { "html", "cssls" }
 local servers = {
   "html",
   "emmet_language_server",
