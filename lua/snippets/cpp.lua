@@ -53,7 +53,7 @@ vim.api.nvim_create_autocmd("BufAdd", {
       local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
       for _, line in ipairs(lines) do
-        if line:find(search_text, 1, true) then -- plain match
+        if line:find(search_text, 1, true) then
           found = true
           break
         end
@@ -62,6 +62,7 @@ vim.api.nvim_create_autocmd("BufAdd", {
       if found then
         require("luasnip").add_snippets("cpp", {
           s("sfr", fmt([[sf::RectangleShape {};]], { i(1, "recName") })),
+          s("sfv", fmt([[sf::Vector2f {};]], { i(1, "vecName") })),
         })
       end
     end)
