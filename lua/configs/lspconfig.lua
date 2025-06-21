@@ -9,8 +9,20 @@ local servers = {
   "lua_ls",
   "clangd",
 }
+
 vim.lsp.config("clangd", {
   filetype = { "c", "cpp" },
+})
+
+vim.lsp.config("nixd", {
+  -- your other options as usual
+  settings = {
+    nixd = {
+      formatting = {
+        command = { "alejandra" },
+      },
+    },
+  },
 })
 
 vim.lsp.enable(servers)
