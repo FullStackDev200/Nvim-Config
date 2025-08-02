@@ -7,6 +7,9 @@ vim.keymap.set("n", "<C-t>", function()
   require("menu").open "default"
 end, {})
 
+-- Terminal esc
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n><C-w>h", { silent = true })
+
 -- Mouse users + NvimTree users
 vim.keymap.set("n", "<RightMouse>", function()
   vim.cmd.exec '"normal! \\<RightMouse>"'
