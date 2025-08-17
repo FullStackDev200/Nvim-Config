@@ -8,7 +8,9 @@ local servers = {
   "lua_ls",
   "gopls",
   "clangd",
+  "nixd",
 }
+
 vim.lsp.config("clangd", {
   filetype = { "c", "cpp" },
   cmd = {
@@ -32,6 +34,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
       )
     end
   end,
+})
+
+vim.lsp.config("nixd", {
+  -- your other options as usual
+  settings = {
+    nixd = {
+      formatting = {
+        command = { "alejandra" },
+      },
+    },
+  },
 })
 
 vim.lsp.enable(servers)
