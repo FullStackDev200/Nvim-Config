@@ -38,7 +38,7 @@ ls.add_snippets("cpp", {
 --                               SFML                               --
 ----------------------------------------------------------------------
 
-vim.api.nvim_create_autocmd("BufAdd", {
+vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local ft = vim.bo[bufnr].filetype

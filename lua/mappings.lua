@@ -2,15 +2,15 @@ require "nvchad.mappings"
 
 local map = vim.keymap.set
 
--- Keyboard users
+-----  Keyboard users
 vim.keymap.set("n", "<C-t>", function()
   require("menu").open "default"
 end, {})
 
--- Terminal esc
+-----  Terminal esc
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n><C-w>h", { silent = true })
 
--- Mouse users + NvimTree users
+-----  Mouse users + NvimTree users
 vim.keymap.set("n", "<RightMouse>", function()
   vim.cmd.exec '"normal! \\<RightMouse>"'
 
@@ -18,7 +18,7 @@ vim.keymap.set("n", "<RightMouse>", function()
   require("menu").open(options, { mouse = true })
 end, {})
 
--- Delete without affecting the default register
+-----  Delete without affecting the default register
 map(
   { "n", "x" },
   "<leader>d",
@@ -26,11 +26,11 @@ map(
   { noremap = true, silent = true, desc = "Delete without affecting default register" }
 )
 
--- Indent settings for visual mode
+-----  Indent settings for visual mode
 map("x", ">", ">gv", { noremap = true, silent = true, desc = "Indent right and reselect" })
 map("x", "<", "<gv", { noremap = true, silent = true, desc = "Indent left and reselect" })
 
--- Primeagen settings for smoother scrolling and movement
+-----  Primeagen settings for smoother scrolling and movement
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
@@ -39,7 +39,7 @@ map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
---Better j and k
+----- Better j and k
 map("n", "j", function()
   local count = vim.v.count
 
@@ -60,25 +60,25 @@ map("n", "k", function()
   end
 end, { expr = true })
 
---
--- [[My remaps]]
---
+-----
+-----  [[My remaps]]
+-----
 
---X to void register
+----- X to void register
 map("n", "x", '"_x', { noremap = true, silent = true, desc = "Delete character under cursor" })
 
--- Paste with visual selection or normal mode
+-----  Paste with visual selection or normal mode
 map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
 
---Tab switch from tabufline
+----- Tab switch from tabufline
 for i = 1, 9, 1 do
   vim.keymap.set("n", string.format("<A-%s>", i), function()
     vim.api.nvim_set_current_buf(vim.t.bufs[i])
   end)
 end
 
--- Command to remove carriage returns
+----- Command to remove carriage returns
 vim.api.nvim_create_user_command("RemoveCarriageReturns", function()
   vim.fn.execute [[%s/\r//g]]
 end, { desc = "Remove carriage returns from the buffer" })
@@ -92,20 +92,36 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
---Git remaps
+----- Git remaps
 map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 
--- Lsp remaps
+map("n", "]c", function()
+  if vim.wo.diff then
+    vim.cmd.normal { "]c", bang = true }
+  else
+    require("gitsigns").nav_hunk "next"
+  end
+end)
+
+map("n", "[c", function()
+  if vim.wo.diff then
+    vim.cmd.normal { "[c", bang = true }
+  else
+    require("gitsigns").nav_hunk "prev"
+  end
+end)
+
+----- Lsp remaps
 map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc = "Show document symbols" })
 map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
+map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
---
---Telescope mappings
---
+----- Telescope mappings
+
 map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
 map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 
----Dap mappings
+----- Dap mappings
 
 map("n", "<F1>", require("dap").continue)
 map("n", "<F2>", require("dap").step_into)
@@ -114,5 +130,16 @@ map("n", "<F4>", require("dap").step_out)
 map("n", "<F5>", require("dap").step_back)
 map("n", "<F13>", require("dap").restart)
 
---Deleted keymaps
+----- Gitsigns
+require("gitsigns").setup {
+  on_attach = function()
+    local gitsigns = require "gitsigns"
+
+    -- Text object
+    map({ "o", "x" }, "ih", gitsigns.select_hunk)
+    map({ "o", "x" }, "ah", gitsigns.select_hunk)
+  end,
+}
+
+----- Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })

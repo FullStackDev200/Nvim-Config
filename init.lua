@@ -38,3 +38,6 @@ end)
 
 -- load luasnips
 require("luasnip.loaders.from_lua").load { paths = "~/.config/nvim/lua/snippets" }
+if vim.loop.os_uname().sysname == "Windows_NT" then
+  require("luasnip.loaders.from_lua").load { paths = "~/AppData/Local/nvim/lua/snippets" }
+end

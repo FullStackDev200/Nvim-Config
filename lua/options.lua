@@ -8,6 +8,13 @@ vim.opt.relativenumber = true
 vim.opt.incsearch = true
 vim.opt.conceallevel = 1 -- Adjust the value as needed (0, 1, or 2)
 
+if vim.loop.os_uname().sysname == "Windows_NT" then
+  vim.opt.shell = "powershell.exe"
+  vim.opt.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned -Command"
+  vim.opt.shellquote = '"'
+  vim.opt.shellxquote = ""
+end
+
 -- vim.opt.list = true
 -- vim.opt.listchars = {
 --   eol = "↴", -- Icon for line breaks

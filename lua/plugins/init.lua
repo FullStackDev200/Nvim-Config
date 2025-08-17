@@ -34,8 +34,8 @@ return {
     "mfussenegger/nvim-dap",
     event = "VeryLazy",
     dependencies = {
-      "rcarriga/nvim-dap-ui", -- Optional: UI for nvim-dap
-      "theHamsta/nvim-dap-virtual-text", -- Optional: Virtual text support
+      "rcarriga/nvim-dap-ui",
+      "theHamsta/nvim-dap-virtual-text",
     },
     config = function()
       require("dapui").setup()
@@ -137,9 +137,8 @@ return {
     "jiaoshijie/undotree",
     dependencies = "nvim-lua/plenary.nvim",
     config = true,
-    keys = { -- load the plugin only when using it's keybinding:
+    keys = {
       { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
     },
   },
-
 }
