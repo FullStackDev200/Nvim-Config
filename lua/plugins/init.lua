@@ -141,4 +141,10 @@ return {
       { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
     },
   },
+
+  {
+    "mrcjkb/haskell-tools.nvim",
+    version = "^6", -- Recommended
+    lazy = false, -- This plugin is already lazy
+  },
 }

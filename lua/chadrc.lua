@@ -9,17 +9,10 @@ M.base46 = {
   theme = "catppuccin",
   -- transparency = true,
   -- hl_override = {
-  -- 	Comment = { italic = true },
-  -- 	["@comment"] = { italic = true },
+  --   Comment = { italic = true },
+  --   ["@comment"] = { italic = true },
   -- },
 }
-
--- M.nvdash = { load_on_startup = true }
--- M.ui = {
---       tabufline = {
---          lazyload = false
---      }
---}
 
 M.ui = {
   cmp = {
@@ -95,6 +88,7 @@ M.nvdash = {
         return "  Loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms
       end,
       hl = "NvDashFooter",
+      content = "fit",
       no_gap = true,
     },
 

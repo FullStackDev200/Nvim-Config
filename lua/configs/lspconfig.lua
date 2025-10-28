@@ -9,6 +9,7 @@ local servers = {
   "gopls",
   "clangd",
   "nixd",
+  "svelte",
 }
 
 vim.lsp.config("clangd", {
@@ -16,7 +17,7 @@ vim.lsp.config("clangd", {
   cmd = {
     "clangd",
     "--compile-commands-dir=build",
-    "--query-driver=C:/ProgramData/mingw64/mingw64/bin/c++.exe",
+    "--query-driver=C:/ProgramData/mingw64/mingw64/bin/g++.exe",
     "--log=verbose",
   },
 })
@@ -45,6 +46,14 @@ vim.lsp.config("nixd", {
       },
     },
   },
+})
+
+vim.lsp.config("emmet_language_server", {
+  filetypes = { "html", "css" },
+})
+
+vim.lsp.config("svelte", {
+  filetypes = { "svelte" },
 })
 
 vim.lsp.enable(servers)
