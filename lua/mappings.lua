@@ -39,6 +39,17 @@ map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
 
+----- Window Navigation
+map({ "n", "x" }, "<C-h>", "<C-w>h", { noremap = true, silent = true, desc = "switch window left" })
+map({ "n", "x" }, "<C-l>", "<C-w>l", { noremap = true, silent = true, desc = "switch window right" })
+map({ "n", "x" }, "<C-j>", "<C-w>j", { noremap = true, silent = true, desc = "switch window down" })
+map({ "n", "x" }, "<C-k>", "<C-w>k", { noremap = true, silent = true, desc = "switch window up" })
+
+map("i", "<C-h>", "<Esc><C-w>ha", { noremap = true, silent = true })
+map("i", "<C-l>", "<Esc><C-w>la", { noremap = true, silent = true })
+map("i", "<C-j>", "<Esc><C-w>ja", { noremap = true, silent = true })
+map("i", "<C-k>", "<Esc><C-w>ka", { noremap = true, silent = true })
+
 ----- Better j and k
 map("n", "j", function()
   local count = vim.v.count
