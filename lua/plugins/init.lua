@@ -31,32 +31,6 @@ return {
   },
 
   {
-    "mfussenegger/nvim-dap",
-    event = "VeryLazy",
-    dependencies = {
-      "rcarriga/nvim-dap-ui",
-      "theHamsta/nvim-dap-virtual-text",
-    },
-    config = function()
-      require("dapui").setup()
-      require("nvim-dap-virtual-text").setup()
-      require "configs.dapconfig"
-    end,
-  },
-
-  {
-    "rcarriga/nvim-dap-ui",
-    event = "VeryLazy",
-    dependencies = {
-      "mfussenegger/nvim-dap",
-      "nvim-neotest/nvim-nio",
-    },
-    config = function()
-      require "configs.dapconfig"
-    end,
-  },
-
-  {
     "echasnovski/mini.ai",
     event = "InsertEnter",
     version = "*",
@@ -131,6 +105,9 @@ return {
   {
     "sindrets/diffview.nvim",
     lazy = false,
+    config = function()
+      require "configs.diffview"
+    end,
   },
 
   {

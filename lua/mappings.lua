@@ -92,6 +92,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
+-- Save without formatting
+vim.api.nvim_create_user_command("W", function()
+  vim.cmd "noautocmd w"
+end, { desc = "Save without formatting" })
+
 ----- Git remaps
 map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 
@@ -120,15 +125,6 @@ map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
 map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
 map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-
------ Dap mappings
-
-map("n", "<F1>", require("dap").continue)
-map("n", "<F2>", require("dap").step_into)
-map("n", "<F3>", require("dap").step_over)
-map("n", "<F4>", require("dap").step_out)
-map("n", "<F5>", require("dap").step_back)
-map("n", "<F13>", require("dap").restart)
 
 ----- Gitsigns
 require("gitsigns").setup {

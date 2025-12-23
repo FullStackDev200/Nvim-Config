@@ -11,9 +11,6 @@ if vim.loop.os_uname().sysname ~= "Windows_NT" then
         fuzzy = {
           sorts = {
             "exact",
-            function(item_a, _)
-              return item_a == "Snippet"
-            end,
             "score",
             "sort_text",
           },

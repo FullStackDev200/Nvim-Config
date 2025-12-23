@@ -9,11 +9,12 @@ local servers = {
   "gopls",
   "clangd",
   "nixd",
+  "bashls",
   "svelte",
 }
 
 vim.lsp.config("clangd", {
-  filetype = { "c", "cpp" },
+  filetype = { "cpp" },
   cmd = {
     "clangd",
     "--compile-commands-dir=build",
