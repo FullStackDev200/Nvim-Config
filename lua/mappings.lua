@@ -103,6 +103,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
+-- Save without formatting
+vim.api.nvim_create_user_command("W", function()
+  vim.cmd "noautocmd w"
+end, { desc = "Save without formatting" })
+
 ----- Git remaps
 map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
 
@@ -145,3 +150,7 @@ require("gitsigns").setup {
 
 ----- Deleted keymaps
 map("n", "s", "<Nop>", { noremap = true, silent = true })
+
+vim.keymap.set("n", "*", function()
+  vim.cmd "keepjumps normal! *N"
+end, { silent = true })
