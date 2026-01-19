@@ -1,5 +1,23 @@
 local spec_treesitter = require("mini.ai").gen_spec.treesitter
 
+require("mini.surround").setup()
+require("mini.operators").setup()
+require("mini.cmdline").setup {
+  autocomplete = {
+    enable = false,
+  },
+}
+
+require("mini.bufremove").setup()
+require("mini.align").setup()
+
+require("mini.basics").setup {
+  mappings = {
+    windows = true,
+    move_with_alt = true,
+  },
+}
+
 require("mini.ai").setup {
   custom_textobjects = {
     f = spec_treesitter { a = "@function.outer", i = "@function.inner" },

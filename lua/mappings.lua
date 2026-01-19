@@ -1,17 +1,18 @@
 require "nvchad.mappings"
 
 local map = vim.keymap.set
+local unmap = vim.keymap.del
 
 -----  Keyboard users
-vim.keymap.set("n", "<C-t>", function()
+map("n", "<C-t>", function()
   require("menu").open "default"
 end, {})
 
 -----  Terminal esc
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n><C-w>h", { silent = true })
+map("t", "<Esc><Esc>", "<C-\\><C-n><C-w>h", { silent = true })
 
 -----  Mouse users + NvimTree users
-vim.keymap.set("n", "<RightMouse>", function()
+map("n", "<RightMouse>", function()
   vim.cmd.exec '"normal! \\<RightMouse>"'
 
   local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
@@ -37,18 +38,6 @@ map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
 map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
-map("n", "<leader>p", '"1p', { desc = "Paste second to last thing" })
-
------ Window Navigation
-map({ "n", "x" }, "<C-h>", "<C-w>h", { noremap = true, silent = true, desc = "switch window left" })
-map({ "n", "x" }, "<C-l>", "<C-w>l", { noremap = true, silent = true, desc = "switch window right" })
-map({ "n", "x" }, "<C-j>", "<C-w>j", { noremap = true, silent = true, desc = "switch window down" })
-map({ "n", "x" }, "<C-k>", "<C-w>k", { noremap = true, silent = true, desc = "switch window up" })
-
-map("i", "<C-h>", "<Esc><C-w>ha", { noremap = true, silent = true })
-map("i", "<C-l>", "<Esc><C-w>la", { noremap = true, silent = true })
-map("i", "<C-j>", "<Esc><C-w>ja", { noremap = true, silent = true })
-map("i", "<C-k>", "<Esc><C-w>ka", { noremap = true, silent = true })
 
 ----- Better j and k
 map("n", "j", function()
@@ -78,13 +67,43 @@ end, { expr = true })
 ----- X to void register
 map("n", "x", '"_x', { noremap = true, silent = true, desc = "Delete character under cursor" })
 
+----- Buffers
+local function new_scratch_buffer(cmd, buflisted)
+  if cmd then
+    vim.cmd(cmd) -- "split" or "vsplit"
+  end
+
+  local buf = vim.api.nvim_create_buf(buflisted, true) -- scratch, nofile
+  vim.api.nvim_win_set_buf(0, buf)
+end
+
+-- current window
+map("n", "<leader>bb", function()
+  new_scratch_buffer("", true)
+end, { desc = "Scratch buffer (current window)" })
+
+-- horizontal split
+map("n", "<leader>bs", function()
+  new_scratch_buffer("split", false)
+end, { desc = "Scratch buffer (horizontal split)" })
+
+-- vertical split
+map("n", "<leader>bv", function()
+  new_scratch_buffer("vsplit", false)
+end, { desc = "Scratch buffer (vertical split)" })
+
+map("n", "<leader>bd", "<Cmd>lua MiniBufremove.delete()<CR>", { desc = "Delete buffer" })
+
+map("n", "<leader>bh", "<Cmd>lua MiniBufremove.unshow()<CR>", { desc = "Hide buffer" })
+
 -----  Paste with visual selection or normal mode
 map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
+
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
 
 ----- Tab switch from tabufline
 for i = 1, 9, 1 do
-  vim.keymap.set("n", string.format("<A-%s>", i), function()
+  map("n", string.format("<A-%s>", i), function()
     vim.api.nvim_set_current_buf(vim.t.bufs[i])
   end)
 end
@@ -103,13 +122,17 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
--- Save without formatting
+----- Save without formatting
 vim.api.nvim_create_user_command("W", function()
   vim.cmd "noautocmd w"
 end, { desc = "Save without formatting" })
 
 ----- Git remaps
-map("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "Open 3 split view" })
+local gitsigns = require "gitsigns"
+
+-- Text object
+map({ "o", "x" }, "ih", gitsigns.select_hunk)
+map({ "o", "x" }, "ah", gitsigns.select_hunk)
 
 map("n", "]c", function()
   if vim.wo.diff then
@@ -127,30 +150,56 @@ map("n", "[c", function()
   end
 end)
 
+map("n", "<leader>gr", function()
+  gitsigns.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
+end, { desc = "Reset Hunk" })
+
+map("n", "<leader>gd", gitsigns.diffthis, { desc = "Diff this file" })
+
+map("n", "<leader>gp", gitsigns.preview_hunk_inline, { desc = "Preview Hunk Inline" })
+map("n", "<leader>gi", gitsigns.preview_hunk, { desc = "Preview Hunk" })
+
 ----- Lsp remaps
 map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc = "Show document symbols" })
 map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
 map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
 ----- Telescope mappings
-
 map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
-map("n", "<leader>gm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+map("n", "<leader>fgc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+map("n", "<leader>fgs", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
+map("n", "<leader>fW", function()
+  require("telescope.builtin").live_grep {
+    default_text = vim.fn.expand "<cword>",
+  }
+end, { desc = "Grep word under cursor" })
 
------ Gitsigns
-require("gitsigns").setup {
-  on_attach = function()
-    local gitsigns = require "gitsigns"
-
-    -- Text object
-    map({ "o", "x" }, "ih", gitsigns.select_hunk)
-    map({ "o", "x" }, "ah", gitsigns.select_hunk)
-  end,
-}
-
------ Deleted keymaps
-map("n", "s", "<Nop>", { noremap = true, silent = true })
-
-vim.keymap.set("n", "*", function()
+----- Luasnip
+map("n", "*", function()
   vim.cmd "keepjumps normal! *N"
 end, { silent = true })
+
+map({ "i", "s" }, "<C-j>", function()
+  require("luasnip").jump(1)
+end, { silent = true })
+
+map({ "i", "s" }, "<C-k>", function()
+  require("luasnip").jump(-1)
+end, { silent = true })
+
+map({ "i", "s" }, "<C-l>", function()
+  require("luasnip").change_choice(1)
+end)
+
+map({ "i", "s" }, "<C-h>", function()
+  require("luasnip").change_choice(-1)
+end)
+
+----- Deleted keymaps
+unmap("n", "s")
+unmap("n", "<leader>b")
+unmap("n", "<leader>x")
+unmap("n", "<leader>gt")
+unmap("n", "<leader>ma")
+unmap("n", "<leader>cm")
+unmap("n", "<leader>pt")

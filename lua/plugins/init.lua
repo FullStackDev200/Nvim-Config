@@ -31,30 +31,12 @@ return {
   },
 
   {
-    "echasnovski/mini.ai",
-    event = "InsertEnter",
-    version = "*",
+    "nvim-mini/mini.nvim",
+    version = false,
+    lazy = false,
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     config = function()
       require "configs.mini"
-    end,
-  },
-
-  {
-    "echasnovski/mini.surround",
-    event = "InsertEnter",
-    version = "*",
-    config = function()
-      require("mini.surround").setup()
-    end,
-  },
-
-  {
-    "echasnovski/mini.operators",
-    event = "InsertEnter",
-    version = "*",
-    config = function()
-      require("mini.operators").setup()
     end,
   },
 
