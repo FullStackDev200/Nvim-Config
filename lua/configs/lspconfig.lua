@@ -13,7 +13,7 @@ local servers = {
 }
 
 vim.lsp.config("clangd", {
-  filetype = { "cpp" },
+  filetypes = { "cpp" },
   cmd = {
     "clangd",
     "--compile-commands-dir=build",
@@ -38,7 +38,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.lsp.config("nixd", {
-  -- your other options as usual
   settings = {
     nixd = {
       formatting = {

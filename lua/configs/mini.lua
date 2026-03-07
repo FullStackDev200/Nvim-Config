@@ -34,7 +34,10 @@ require("mini.ai").setup {
       return { from = from, to = to }
     end,
     a = spec_treesitter { a = "@parameter.outer", i = "@parameter.inner" },
+    s = spec_treesitter { a = "@statement.outer", i = "@statement.inner" },
+    c = spec_treesitter { a = "@class.outer", i = "@class.inner" },
   },
+
   search_method = "cover_or_nearest",
   n_line = 100,
 }

@@ -41,16 +41,6 @@ return {
   },
 
   {
-    "theprimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require "configs.harpoon"
-    end,
-    keys = require "configs.harpoon",
-  },
-
-  {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = "markdown",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
@@ -71,17 +61,6 @@ return {
         match = '[0-9a-zA-Z"]',
       }
     end,
-  },
-
-  {
-    "NeogitOrg/neogit",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "sindrets/diffview.nvim",
-      "nvim-telescope/telescope.nvim",
-    },
-    cmd = "Neogit",
-    config = true,
   },
 
   {

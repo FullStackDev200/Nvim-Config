@@ -1,3 +1,4 @@
+---@diagnostic disable
 vim.g.haskell_tools = {
   tools = {
     repl = {
