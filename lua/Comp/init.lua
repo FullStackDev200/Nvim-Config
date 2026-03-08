@@ -5,6 +5,35 @@ local state_file = vim.fn.stdpath "data" .. "/project_state.json"
 local function get_root()
   return vim.fn.systemlist("git rev-parse --show-toplevel")[1]
 end
+local function contains_dir(tbl, dir)
+  for _, v in ipairs(tbl) do
+    if v.dir == dir then
+      return true
+    end
+  end
+  return false
+end
+
+local function find_dir(tbl, dir)
+  for _, v in ipairs(tbl) do
+    if v.dir == dir then
+      return v
+    end
+  end
+  return {}
+end
+
+local function replace_table_with_key(tbl, dir, new_entry)
+  local new_list = {}
+  for _, v in ipairs(tbl) do
+    if v.dir == dir then
+      table.insert(new_list, new_entry) -- replace matched entry
+    else
+      table.insert(new_list, v)         -- keep everything else
+    end
+  end
+  return new_list
+end
 
 ---@class ProjectState
 ---@field dir string
@@ -13,25 +42,51 @@ end
 
 ---Save project state
 ---@param state ProjectState
-local function save_state(state)
-  if not state then
-    return
+local function save_state(new_state)
+  if not new_state then return end
+
+  local state_list = {}
+
+  local f = vim.uv.fs_open(state_file, "r", 438)
+  if f then
+    local stat = vim.uv.fs_fstat(f)
+    local data = stat and vim.uv.fs_read(f, stat.size, 0)
+    vim.uv.fs_close(f)
+
+    if data and data ~= "" then
+      local ok, result = pcall(vim.json.decode, data)
+      if not ok then
+        vim.notify("Failed to decode project state: " .. result, vim.log.levels.ERROR)
+        return
+      end
+      state_list = result
+    end
   end
 
-  local ok, encoded = pcall(vim.json.encode, state)
+  local new_state_list
+  if contains_dir(state_list, new_state.dir) then
+    new_state_list = replace_table_with_key(state_list, new_state.dir, new_state)
+  else
+    new_state_list = {}
+    for k, v in pairs(state_list) do
+      new_state_list[k] = v
+    end
+    table.insert(new_state_list, new_state)
+  end
+
+  local ok, encoded = pcall(vim.json.encode, new_state_list)
   if not ok or not encoded then
     vim.notify("Failed to encode project state", vim.log.levels.ERROR)
     return
   end
 
-  local f = io.open(state_file, "w")
-  if not f then
-    vim.notify("Failed to open state file", vim.log.levels.ERROR)
+  local f2 = vim.uv.fs_open(state_file, "w", 438)
+  if not f2 then
+    vim.notify("Could not write file", vim.log.levels.ERROR)
     return
   end
-
-  f:write(encoded)
-  f:close()
+  vim.uv.fs_write(f2, encoded, 0)
+  vim.uv.fs_close(f2)
 end
 
 ---Get project state
@@ -48,7 +103,10 @@ local function get_state()
 end
 
 Comp.get_comp_command = function()
-  return get_state().build_command
+  local dir = get_root() or vim.fn.getcwd()
+  local comp_list = get_state()
+  vim.print(find_dir(comp_list, dir))
+  return find_dir(comp_list, dir).build_command
 end
 
 ---Set compilation command
@@ -125,7 +183,8 @@ end
 
 Comp.state = {
   is_open = false,
-  buf = nil,
+  output_buf = nil,
+  output_win = 0,
 }
 
 Comp.compile = function()
@@ -133,12 +192,12 @@ Comp.compile = function()
   local current_win = vim.api.nvim_get_current_win()
   local output = vim.fn.system(Comp.get_comp_command())
 
-  local buf = Comp.state.buf
+  local buf = Comp.state.output_buf
 
   if not Comp.state.is_open then
     buf = vim.api.nvim_create_buf(false, true)
 
-    vim.api.nvim_open_win(buf, false, {
+    Comp.state.output_win = vim.api.nvim_open_win(buf, false, {
       split = "below",
       win = 0,
       height = 12,
@@ -160,7 +219,7 @@ Comp.compile = function()
     vim.bo[buf].modifiable = false
 
     Comp.state.is_open = true
-    Comp.state.buf = buf
+    Comp.state.output_buf = buf
   end
 
   vim.bo[buf].modifiable = true
@@ -187,6 +246,15 @@ end
 
 Comp.setup = function()
   _G.Comp = Comp
+
+  vim.api.nvim_create_autocmd("WinClosed", {
+    callback = function(event)
+      local win_id = tonumber(event.match)
+      if win_id == Comp.state.output_win then
+        Comp.state.is_open = false
+      end
+    end,
+  })
 end
 
 return Comp
