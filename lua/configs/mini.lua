@@ -2,8 +2,13 @@ local spec_treesitter = require("mini.ai").gen_spec.treesitter
 
 require("mini.surround").setup()
 require("mini.pick").setup()
+require("mini.pairs").setup()
 require("mini.extra").setup()
 require("mini.operators").setup()
+
+require("mini.files").setup()
+vim.keymap.set("n", "<leader>e", "<cmd>lua MiniFiles.open()<CR>", { silent = true, desc = "Open Navigation Tree"})
+
 require("mini.cmdline").setup {
   autocomplete = {
     enable = false,
