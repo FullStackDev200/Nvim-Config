@@ -5,8 +5,9 @@ return {
       "nvim-lua/plenary.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
+    enabled = not (vim.loop.os_uname().version:match("Windows") ~= nil),
     config = function()
-      require "configs.telescope"
+     require "configs.telescope"
     end,
   },
 
@@ -72,6 +73,30 @@ return {
   },
 
   {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    lazy = false,
+    config = function()
+      require("todo-comments").setup()
+      dofile(vim.g.base46_cache .. "todo")
+    end,
+  },
+
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+    config = function()
+      dofile(vim.g.base46_cache .. "neogit")
+      vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Show Neogit UI" })
+    end,
+  },
+
+  {
     "jiaoshijie/undotree",
     dependencies = "nvim-lua/plenary.nvim",
     config = true,
@@ -90,4 +115,26 @@ return {
   },
 
   { "akinsho/toggleterm.nvim", version = "*", config = require "configs.term" },
+
+  {
+    dir = "C:/Users/round/source/repos/Comp.nvim",
+    lazy = false,
+    config = function()
+      require("Comp").setup()
+    end,
+  },
+
+  {
+    "dmtrKovalenko/fff.nvim",
+    build = function()
+      require("fff.download").download_or_build_binary()
+    end,
+    opts = {
+      debug = {
+        enabled = true,
+        show_scores = true,
+      },
+    },
+    lazy = false, -- the plugin lazy-initialises itself
+  }
 }

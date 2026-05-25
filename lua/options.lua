@@ -27,4 +27,3 @@ end
 --   extends = "…", -- Icon for overflowing lines
 --   precedes = "…", -- Icon for wrapped lines
 -- }
-require("lua.Comp.init").setup()

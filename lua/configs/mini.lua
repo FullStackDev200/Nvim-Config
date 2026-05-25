@@ -1,6 +1,8 @@
 local spec_treesitter = require("mini.ai").gen_spec.treesitter
 
 require("mini.surround").setup()
+require("mini.pick").setup()
+require("mini.extra").setup()
 require("mini.operators").setup()
 require("mini.cmdline").setup {
   autocomplete = {

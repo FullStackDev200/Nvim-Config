@@ -5,8 +5,10 @@
 ---@type ChadrcConfig
 local M = {}
 
+-- TODO:
 M.base46 = {
   theme = "catppuccin",
+  integrations = { "neogit", "todo", "diffview" },
   -- transparency = true,
   -- hl_override = {
   --   Comment = { italic = true },

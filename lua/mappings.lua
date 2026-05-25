@@ -159,20 +159,47 @@ map("n", "<leader>gd", gitsigns.diffthis, { desc = "Diff this file" })
 map("n", "<leader>gp", gitsigns.preview_hunk_inline, { desc = "Preview Hunk Inline" })
 map("n", "<leader>gi", gitsigns.preview_hunk, { desc = "Preview Hunk" })
 
------ Lsp remaps
-map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc = "Show document symbols" })
-map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
 map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
 ----- Telescope mappings
-map("n", "<leader>fm", ":Telescope keymaps<CR>", { desc = "Telescope mappings" })
-map("n", "<leader>fgc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>fgs", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
-map("n", "<leader>fW", function()
-  require("telescope.builtin").live_grep {
-    default_text = vim.fn.expand "<cword>",
-  }
-end, { desc = "Grep word under cursor" })
+if vim.loop.os_uname().sysname == "Windows_NT" then
+  map("n", "<leader>ff", function()
+    require("fff").find_files()
+  end, { desc = "FFFind files" })
+  map("n", "<leader>fw", function()
+    require("fff").live_grep()
+  end, { desc = "LiFFFe grep" })
+  map("n", "<leader>fz", function()
+    require("fff").live_grep { grep = { modes = { "fuzzy", "plain" } } }
+  end, { desc = "Live fffuzy grep" })
+  map("n", "<leader>fc", function()
+    require("fff").live_grep { query = vim.fn.expand "<cword>" }
+  end, { desc = "Search current word" })
+  map("n", "<leader>fh", "<cmd>Pick help<CR>", { desc = "pick help page" })
+  map("n", "<leader>fb", "<cmd>Pick buffers<CR>", { desc = "pick buffers" })
+  map("n", "<leader>fo", "<cmd>Pick oldfiles<CR>", { desc = "telescope find oldfiles" })
+else
+  map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
+  map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
+  map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
+  map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+  map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
+  map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
+  map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+  map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
+  map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
+  map("n", "<leader>fm", "<cmd>Telescope keymaps<CR>", { desc = "Telescope mappings" })
+  map("n", "<leader>fgc", "<cmd>Telescope git_commits<CR>", { desc = "Telescope git commits" })
+  map("n", "<leader>fgs", "<cmd>Telescope git_status<CR>", { desc = "Telescope git status" })
+  map("n", "<leader>fW", function()
+    require("telescope.builtin").live_grep {
+      default_text = vim.fn.expand "<cword>",
+    }
+  end, { desc = "Grep word under cursor" })
+  map("n", "<leader>ft", "<Cmd>TodoTelescope<CR>", { desc = "Search Todos" })
+  map("n", "<leader>ld", require("telescope.builtin").lsp_document_symbols, { desc = "Show document symbols" })
+  map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { desc = "Show workspace symbols" })
+end
 
 ----- Luasnip
 map("n", "*", function()
@@ -195,6 +222,32 @@ map({ "i", "s" }, "<C-h>", function()
   require("luasnip").change_choice(-1)
 end)
 
+----- Toggles
+----- From mini.basics
+local toggle_prefix = "\\"
+
+local map_toggle = function(lhs, rhs, desc)
+  map("n", toggle_prefix .. lhs, rhs, { desc = desc })
+end
+
+map_toggle(
+  "g",
+  '<Cmd>lua vim.print((require("gitsigns").toggle_signs() and "  " or "no") .. "gitsigns")<CR>',
+  "Toggle 'Gitsigns'"
+)
+local cmp = require "cmp"
+
+map_toggle("a", function()
+  vim.print(cmp.get_config().completion.autocomplete)
+  if cmp.get_config().completion.autocomplete then
+    cmp.setup { completion = { autocomplete = false } }
+    print "noautocomplete"
+  else
+    cmp.setup { completion = { autocomplete = { cmp.TriggerEvent.TextChanged } } }
+    print "  autocomplete"
+  end
+end, "Toggle autocomplete")
+
 ----- Deleted keymaps
 unmap("n", "s")
 unmap("n", "<leader>b")
@@ -203,3 +256,8 @@ unmap("n", "<leader>gt")
 unmap("n", "<leader>ma")
 unmap("n", "<leader>cm")
 unmap("n", "<leader>pt")
+
+----- Getting used to nvim natives
+map("n", "<leader>/", function()
+  vim.print "Use gc instead"
+end)
