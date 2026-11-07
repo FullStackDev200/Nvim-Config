@@ -25,29 +25,12 @@ map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
 map("n", "n", "nzzzv", { desc = "Search forward and center cursor" })
 map("n", "N", "Nzzzv", { desc = "Search backward and center cursor" })
 
------ Better j and k
-map("n", "j", function()
-  local count = vim.v.count
-
-  if count == 0 then
-    return "gj"
-  else
-    return "j"
-  end
-end, { expr = true })
-
-map("n", "k", function()
-  local count = vim.v.count
-
-  if count == 0 then
-    return "gk"
-  else
-    return "k"
-  end
-end, { expr = true })
-
 ----- X to void register
 map("n", "x", '"_x', { noremap = true, silent = true, desc = "Delete character under cursor" })
+
+
+----- Better / in visual mode
+map("x", "/", [["zy/<C-r>z<CR>]], { noremap = true })
 
 ----- Buffers
 local function new_scratch_buffer(cmd, buflisted)
@@ -83,12 +66,11 @@ map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
 
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
 
--- ----- Tab switch from tabufline
--- for i = 1, 9, 1 do
---   map("n", string.format("<A-%s>", i), function()
---     vim.api.nvim_set_current_buf(vim.t.bufs[i])
---   end)
--- end
+----- Lsp formatting
+
+vim.api.nvim_create_user_command("LspFormat", function()
+  vim.lsp.buf.format()
+end, {})
 
 ----- Command to remove carriage returns
 vim.api.nvim_create_user_command("RemoveCarriageReturns", function()
@@ -106,8 +88,22 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 
 ----- Save without formatting
 vim.api.nvim_create_user_command("W", function()
-  vim.cmd "noautocmd w"
+  vim.cmd "w"
+  vim.cmd "LspFormat"
 end, { desc = "Save without formatting" })
+
+----- Add position before entering visual mode to jumplist
+local function mark_and_visual(key)
+  return function()
+    vim.cmd("normal! m'")
+    local k = vim.api.nvim_replace_termcodes(key, true, false, true)
+    vim.api.nvim_feedkeys(k, 'n', false)
+  end
+end
+
+map('n', 'v', mark_and_visual('v'), { noremap = true })
+map('n', 'V', mark_and_visual('V'), { noremap = true })
+map('n', '<C-v>', mark_and_visual('<C-v>'), { noremap = true })
 
 ----- Git remaps
 local gitsigns = require "gitsigns"
@@ -147,18 +143,14 @@ map("n", "<leader>lw", require("telescope.builtin").lsp_workspace_symbols, { des
 map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
 ----- Telescope mappings
-map("n", "<leader>ff",  "<cmd>Telescope find_files<CR>", { desc = "Telescope Files" })
-map("n", "<leader>fo",  "<cmd>Telescope oldfiles<CR>", { desc = "Telescope Regex" })
-map("n", "<leader>fw",  "<cmd>Telescope grep_string<CR>", { desc = "Telescope Regex" })
-map("n", "<leader>fh",  "<cmd>Telescope help_tags<CR>", { desc = "Telescope Regex" })
-map("n", "<leader>fm",  "<cmd>Telescope keymaps<CR>", { desc = "Telescope Mappings" })
+map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Telescope Files" })
+map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "Telescope Regex" })
+map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "Telescope Regex" })
+map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Telescope Regex" })
+map("n", "<leader>fm", "<cmd>Telescope keymaps<CR>", { desc = "Telescope Mappings" })
 map("n", "<leader>fgc", "<cmd>Telescope git_commits<CR>", { desc = "Telescope Git Commits" })
 map("n", "<leader>fgs", "<cmd>Telescope git_status<CR>", { desc = "Telescope Git Status" })
-map("n", "<leader>fW", function()
-  require("telescope.builtin").live_grep {
-    default_text = vim.fn.expand "<cword>",
-  }
-end, { desc = "Grep Word Under Cursor" })
+map("n", "<leader>fW", "<cmd>Telescope grep_string<CR>", { desc = "Telescope world under the cursor" })
 
 ----- Luasnip
 map("n", "*", function()

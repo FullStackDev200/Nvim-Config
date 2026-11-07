@@ -78,6 +78,15 @@ if is_windows then
     paste = { ['+'] = 'win32yank.exe -o --lf', ['*'] = 'win32yank.exe -o --lf' },
     cache_enabled = 0,
   }
+
+  -- Set shell to pwsh
+  vim.opt.shell = "pwsh.exe"
+  vim.opt.shellcmdflag = "-NoLogo -NoProfile -Command"
+  vim.opt.shellquote = ""
+  vim.opt.shellxquote = ""
+  vim.opt.shellredir = "2>&1 | Out-File -Encoding UTF8 %s"
+  vim.env.NO_COLOR = "1"
+  vim.opt.errorformat:prepend "%-Gmake%.%#"
 end
 
 vim.cmd.packadd("nvim.undotree")
