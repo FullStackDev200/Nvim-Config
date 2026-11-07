@@ -58,10 +58,18 @@ vim.diagnostic.config({
     source = "if_many",
     prefix = '● ',
   },
-  update_in_insert = false,
+-- <<<<<<< HEAD
+--   update_in_insert = false,
+--   severity_sort = true,
+--   float = {
+--     focusable = true,
+-- =======
+  update_in_insert = true,
+  underline = true,
   severity_sort = true,
   float = {
-    focusable = true,
+    focusable = false,
+-- >>>>>>> 36598e96fdf69e26d616cc2a9d9c9a3543bae283
     style = 'minimal',
     border = 'rounded',
     source = 'if_many',
@@ -78,6 +86,7 @@ if is_windows then
     paste = { ['+'] = 'win32yank.exe -o --lf', ['*'] = 'win32yank.exe -o --lf' },
     cache_enabled = 0,
   }
+-- <<<<<<< HEAD
 
   -- Set shell to pwsh
   vim.opt.shell = "pwsh.exe"
@@ -87,6 +96,8 @@ if is_windows then
   vim.opt.shellredir = "2>&1 | Out-File -Encoding UTF8 %s"
   vim.env.NO_COLOR = "1"
   vim.opt.errorformat:prepend "%-Gmake%.%#"
+-- =======
+-- >>>>>>> 36598e96fdf69e26d616cc2a9d9c9a3543bae283
 end
 
 vim.cmd.packadd("nvim.undotree")

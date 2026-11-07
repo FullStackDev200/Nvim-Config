@@ -34,3 +34,4 @@ require("configs.luasnip")
 require("configs.lspconfig")
 require("configs.treesitter")
 require("configs.neogit")
+

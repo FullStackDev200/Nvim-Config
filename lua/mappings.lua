@@ -66,12 +66,6 @@ map("n", "<A-v>", "<C-v>", { desc = "Paste from clipboard" })
 
 map("n", "<leader><leader>x", ":source %<CR>", { desc = "Execute current file<CR>", noremap = true, silent = true })
 
------ Lsp formatting
-
-vim.api.nvim_create_user_command("LspFormat", function()
-  vim.lsp.buf.format()
-end, {})
-
 ----- Command to remove carriage returns
 vim.api.nvim_create_user_command("RemoveCarriageReturns", function()
   vim.fn.execute [[%s/\r//g]]
