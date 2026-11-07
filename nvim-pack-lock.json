@@ -56,6 +56,10 @@
       "rev": "ec309a0eaff6ea967e58c275996155ab5c16938d",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
+    "pathfinder.nvim": {
+      "rev": "9c79815dfd31726119b44a71c0654377be01d3c2",
+      "src": "https://github.com/HawkinsT/pathfinder.nvim"
+    },
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"

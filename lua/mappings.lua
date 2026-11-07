@@ -13,6 +13,15 @@ map(
   { noremap = true, silent = true, desc = "Delete without affecting default register" }
 )
 
+-----  Save with formatting
+vim.api.nvim_create_user_command("W", function()
+  vim.lsp.buf.format({ async = true })
+
+  vim.cmd("write")
+  vim.notify("File saved with LSP formatting", vim.log.levels.INFO)
+end, { desc = "Format and save file" })
+
+
 -----  Indent settings for visual mode
 map("x", ">", ">gv", { noremap = true, silent = true, desc = "Indent right and reselect" })
 map("x", "<", "<gv", { noremap = true, silent = true, desc = "Indent left and reselect" })
@@ -80,12 +89,6 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
------ Save without formatting
-vim.api.nvim_create_user_command("W", function()
-  vim.cmd "w"
-  vim.cmd "LspFormat"
-end, { desc = "Save without formatting" })
-
 ----- Add position before entering visual mode to jumplist
 local function mark_and_visual(key)
   return function()
@@ -144,7 +147,31 @@ map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Telescope Regex
 map("n", "<leader>fm", "<cmd>Telescope keymaps<CR>", { desc = "Telescope Mappings" })
 map("n", "<leader>fgc", "<cmd>Telescope git_commits<CR>", { desc = "Telescope Git Commits" })
 map("n", "<leader>fgs", "<cmd>Telescope git_status<CR>", { desc = "Telescope Git Status" })
-map("n", "<leader>fW", "<cmd>Telescope grep_string<CR>", { desc = "Telescope world under the cursor" })
+map("n", "<leader>fW", "<cmd>Telescope grep_string<CR>", { desc = "Telescope word under cursor" })
+
+----- Toggles
+----- From mini.basics
+local toggle_prefix = "\\"
+
+local map_toggle = function(lhs, rhs, desc)
+  map("n", toggle_prefix .. lhs, rhs, { desc = desc })
+end
+
+map_toggle(
+  "g",
+  '<Cmd>lua vim.print((require("gitsigns").toggle_signs() and "  " or "no") .. "gitsigns")<CR>',
+  "Toggle 'Gitsigns'"
+)
+
+local blink = require "blink.cmp"
+local config = require('blink.cmp.config')
+
+map_toggle("t", function()
+  local isToggled = config.completion.ghost_text.enabled
+  config.completion.ghost_text.enabled = not isToggled
+  blink.setup(config)
+  vim.notify((not isToggled and "  " or "no") .. "ghost_text")
+end, "Toggle autocomplete")
 
 ----- Luasnip
 map("n", "*", function()

@@ -1,10 +1,12 @@
-vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
-  local name, kind = ev.data.spec.name, ev.data.kind
-  if name == 'nvim-treesitter' and kind == 'update' then
-    if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
-    vim.cmd('TSUpdate')
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == 'nvim-treesitter' and kind == 'update' then
+      if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+      vim.cmd('TSUpdate')
+    end
   end
-end })
+})
 
 vim.pack.add({
   "https://github.com/nvim-lua/plenary.nvim",
@@ -21,6 +23,7 @@ vim.pack.add({
   "https://github.com/jinh0/eyeliner.nvim",
   "https://github.com/neogitorg/neogit",
   "https://github.com/sindrets/diffview.nvim",
+  "https://github.com/HawkinsT/pathfinder.nvim",
 
   "https://github.com/saghen/blink.lib",
   "https://github.com/saghen/blink.cmp",
@@ -34,4 +37,3 @@ require("configs.luasnip")
 require("configs.lspconfig")
 require("configs.treesitter")
 require("configs.neogit")
-
